@@ -57,11 +57,13 @@ window.fbState = {
 async function initFirebase() {
   try {
     // Importer Firebase dynamiquement (CDN modulaire v10)
-    const { initializeApp }         = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp }
+   // const { initializeApp }         = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+   // const { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp }
                                     = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const { getAuth, signInAnonymously, onAuthStateChanged }
-                                    = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    //const { getAuth, signInAnonymously, onAuthStateChanged }
+                                   // = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+     const db = firebase.firestore();
+const auth = firebase.auth();
 
     // Initialiser l'app
     const app  = initializeApp(window.FIREBASE_CONFIG);
