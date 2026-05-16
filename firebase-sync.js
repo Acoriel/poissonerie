@@ -59,48 +59,42 @@ window.fbState = {
 // ── INITIALISATION FIREBASE ───────────────────────────────────────────────────
 async function initFirebase() {
   try {
-    // Importer Firebase dynamiquement (CDN modulaire v10)
-   // const { initializeApp }         = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-   // const { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp }
-                                    //= await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    //const { getAuth, signInAnonymously, onAuthStateChanged }
-                                   // = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-     //const db = firebase.firestore();
-//const auth = firebase.auth();
 
-    // Initialiser l'app
-    //const app  = initializeApp(window.FIREBASE_CONFIG);
-    //const db   = getFirestore(app);
-    //const auth = getAuth(app);
-     firebase.initializeApp(window.FIREBASE_CONFIG);
+    // Initialisation Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(window.FIREBASE_CONFIG);
+    }
 
-const db = firebase.firestore();
-const auth = firebase.auth();
+    const db = firebase.firestore();
+    const auth = firebase.auth();
 
-    window.fbState.db   = db;
+    window.fbState.db = db;
     window.fbState.auth = auth;
 
-    // Stockage des fonctions Firestore pour usage ultérieur
-    window._fb = { doc, getDoc, setDoc, onSnapshot, serverTimestamp };
+    // Authentification anonyme
+    await auth.signInAnonymously();
 
-    // Authentification anonyme (chaque appareil = un utilisateur Firebase)
-    //await signInAnonymously(auth);
-
-    onAuthStateChanged(auth, user => {
+    auth.onAuthStateChanged(user => {
       if (user) {
         window.fbState.userId = user.uid;
         window.fbState.initialized = true;
-        console.log('[Firebase] Authentifié:', user.uid.slice(0,8)+'...');
+
+        console.log('[Firebase] Authentifié:', user.uid);
+
         startFirestoreListener();
         updateSyncBadge('connected');
       }
     });
 
     return true;
+
   } catch (err) {
     console.error('[Firebase] Erreur init:', err);
+
     window.fbState.error = err.message;
+
     updateSyncBadge('error');
+
     return false;
   }
 }
