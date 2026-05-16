@@ -13,13 +13,13 @@
    ══════════════════════════════════════════════════════════════════════════════ */
 
 // ── CONFIGURATION FIREBASE (à remplacer) ──────────────────────────────────────
-window.FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-  authDomain:        "votre-projet.firebaseapp.com",
-  projectId:         "votre-projet",
-  storageBucket:     "votre-projet.appspot.com",
-  messagingSenderId: "123456789012",
-  appId:             "1:123456789012:web:abcdef1234567890"
+const firebaseConfig = {
+  apiKey: "AIzaSyDRnGN5YkhI9_wtjAP2LHwGjMjUrgpo_8I",
+  authDomain: "poissonerie-cfd28.firebaseapp.com",
+  projectId: "poissonerie-cfd28",
+  storageBucket: "poissonerie-cfd28.firebasestorage.app",
+  messagingSenderId: "888779339185",
+  appId: "1:888779339185:web:2770c350cb4c1f22323990"
 };
 // ─────────────────────────────────────────────────────────────────────────────
 
