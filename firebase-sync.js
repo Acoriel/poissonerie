@@ -13,7 +13,7 @@
    ══════════════════════════════════════════════════════════════════════════════ */
 
 // ── CONFIGURATION FIREBASE (à remplacer) ──────────────────────────────────────
-<script type="module">
+
   // Import the functions you need from the SDKs you need
   
   // TODO: Add SDKs for Firebase products that you want to use
@@ -30,8 +30,11 @@
   };
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
+ // const app = initializeApp(firebaseConfig);
+
+// Rendre accessible globalement
+window.FIREBASE_CONFIG = firebaseConfig;
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Nom du document Firestore dans lequel toutes les données sont stockées
@@ -59,16 +62,20 @@ async function initFirebase() {
     // Importer Firebase dynamiquement (CDN modulaire v10)
    // const { initializeApp }         = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
    // const { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp }
-                                    = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+                                    //= await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
     //const { getAuth, signInAnonymously, onAuthStateChanged }
                                    // = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
      const db = firebase.firestore();
 const auth = firebase.auth();
 
     // Initialiser l'app
-    const app  = initializeApp(window.FIREBASE_CONFIG);
-    const db   = getFirestore(app);
-    const auth = getAuth(app);
+    //const app  = initializeApp(window.FIREBASE_CONFIG);
+    //const db   = getFirestore(app);
+    //const auth = getAuth(app);
+     firebase.initializeApp(window.FIREBASE_CONFIG);
+
+const db = firebase.firestore();
+const auth = firebase.auth();
 
     window.fbState.db   = db;
     window.fbState.auth = auth;
@@ -77,7 +84,7 @@ const auth = firebase.auth();
     window._fb = { doc, getDoc, setDoc, onSnapshot, serverTimestamp };
 
     // Authentification anonyme (chaque appareil = un utilisateur Firebase)
-    await signInAnonymously(auth);
+    //await signInAnonymously(auth);
 
     onAuthStateChanged(auth, user => {
       if (user) {
