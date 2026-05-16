@@ -65,8 +65,8 @@ async function initFirebase() {
                                     //= await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
     //const { getAuth, signInAnonymously, onAuthStateChanged }
                                    // = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
-     const db = firebase.firestore();
-const auth = firebase.auth();
+     //const db = firebase.firestore();
+//const auth = firebase.auth();
 
     // Initialiser l'app
     //const app  = initializeApp(window.FIREBASE_CONFIG);
