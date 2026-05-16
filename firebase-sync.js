@@ -13,23 +13,25 @@
    ══════════════════════════════════════════════════════════════════════════════ */
 
 // ── CONFIGURATION FIREBASE (à remplacer) ──────────────────────────────────────
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDRnGN5YkhI9_wtjAP2LHwGjMjUrgpo_8I",
-  authDomain: "poissonerie-cfd28.firebaseapp.com",
-  projectId: "poissonerie-cfd28",
-  storageBucket: "poissonerie-cfd28.firebasestorage.app",
-  messagingSenderId: "888779339185",
-  appId: "1:888779339185:web:2770c350cb4c1f22323990"
-};
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDRnGN5YkhI9_wtjAP2LHwGjMjUrgpo_8I",
+    authDomain: "poissonerie-cfd28.firebaseapp.com",
+    projectId: "poissonerie-cfd28",
+    storageBucket: "poissonerie-cfd28.firebasestorage.app",
+    messagingSenderId: "888779339185",
+    appId: "1:888779339185:web:2770c350cb4c1f22323990"
+  };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Nom du document Firestore dans lequel toutes les données sont stockées
