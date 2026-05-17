@@ -80,43 +80,6 @@ self.addEventListener('fetch', event => {
   );
 });
 
-  // Pour l'app principale et les assets : Cache with network fallback
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        // Récupérer en arrière-plan pour mise à jour
-        const fetchPromise = fetch(event.request).then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseClone);
-            });
-          }
-          return networkResponse;
-        }).catch(() => cachedResponse);
-
-        return cachedResponse; // Retourner le cache immédiatement
-      }
-
-      // Pas en cache : réseau
-      return fetch(event.request).then(response => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
-        }
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, responseClone);
-        });
-        return response;
-      }).catch(() => {
-        // Offline fallback
-        if (event.request.destination === 'document') {
-          return caches.match('./index.html');
-        }
-      });
-    })
-  );
-});
 
 // Message depuis l'app pour forcer la mise à jour
 self.addEventListener('message', event => {
