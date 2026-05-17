@@ -3,14 +3,12 @@
    Gère le cache offline + mise à jour automatique
    ══════════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'poissonerie-v3';
-self.addEventListener('install', () => {
-  self.skipWaiting();
-});
+/* ══════════════════════════════════════════════════════════════════
+   SERVICE WORKER — Poissonerie PWA
+   ══════════════════════════════════════════════════════════════════ */
 
-self.addEventListener('activate', event => {
-  event.waitUntil(clients.claim());
-});
+const CACHE_NAME = 'poissonerie-v4';
+
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -22,42 +20,35 @@ const ASSETS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'
 ];
 
-// Installation : mise en cache des ressources statiques
+// INSTALLATION
 self.addEventListener('install', event => {
   console.log('[SW] Installation...');
+
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS_TO_CACHE).catch(err => {
-        console.warn('[SW] Certaines ressources non mises en cache:', err);
-      });
-    }).then(() => {
-      console.log('[SW] Cache prêt');
-      return self.skipWaiting();
+      return cache.addAll(ASSETS_TO_CACHE);
     })
   );
 });
 
-// Activation : suppression des anciens caches
+// ACTIVATION
 self.addEventListener('activate', event => {
   console.log('[SW] Activation...');
+
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames
           .filter(name => name !== CACHE_NAME)
-          .map(name => {
-            console.log('[SW] Suppression ancien cache:', name);
-            return caches.delete(name);
-          })
+          .map(name => caches.delete(name))
       );
-    }).then(() => {
-      console.log('[SW] Actif et prêt');
-      return self.clients.claim();
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
-// Fetch : stratégie Network-first pour l'app, Cache-first pour les assets
+// FETCH
 self.addEventListener('fetch', event => {
 
   if (event.request.method !== 'GET') return;
@@ -80,8 +71,7 @@ self.addEventListener('fetch', event => {
   );
 });
 
-
-// Message depuis l'app pour forcer la mise à jour
+// MESSAGE
 self.addEventListener('message', event => {
   if (event.data && event.data.action === 'SKIP_WAITING') {
     self.skipWaiting();
