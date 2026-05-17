@@ -65,7 +65,7 @@ async function initFirebase() {
       firebase.initializeApp(window.FIREBASE_CONFIG);
     }
 
-   // const db = firebase.firestore();
+   const db = firebase.firestore();
     const auth = firebase.auth();
 
     window.fbState.db = db;
