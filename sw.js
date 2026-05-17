@@ -3,7 +3,7 @@
    Gère le cache offline + mise à jour automatique
    ══════════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'poissonerie-v1';
+const CACHE_NAME = 'poissonerie-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
