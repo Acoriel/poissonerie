@@ -102,7 +102,7 @@ async function initFirebase() {
 
 // ── LISTENER TEMPS RÉEL ───────────────────────────────────────────────────────
 function startFirestoreListener() {
-  cconst { db } = window.fbState;
+  const { db } = window.fbState;
 if (!db) return;
 
   // Arrêter l'ancien listener s'il existe
