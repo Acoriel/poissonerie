@@ -5066,7 +5066,7 @@ function expPertes(){
 
 // ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH (GitHub Pages Mobile) ─────────────
 // ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH ──
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     const isMobile =
         /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
@@ -5080,30 +5080,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
 
-            // Masquer splash
+            // 1. Supprimer splash
             const splash = document.getElementById('splash-screen');
 
             if (splash) {
                 splash.style.display = 'none';
             }
 
-            // Afficher dashboard
+            // 2. Cacher toutes les pages
             document.querySelectorAll('.pg').forEach(pg => {
+
                 pg.classList.remove('on');
+
+                pg.style.display = 'none';
+                pg.style.visibility = 'hidden';
+                pg.style.opacity = '0';
+
             });
 
+            // 3. Afficher dashboard
             const dash = document.getElementById('pg-dash');
 
             if (dash) {
+
                 dash.classList.add('on');
+
                 dash.style.display = 'block';
                 dash.style.visibility = 'visible';
                 dash.style.opacity = '1';
+                dash.style.position = 'relative';
+                dash.style.zIndex = '9999';
+
+                console.log("✅ Dashboard affiché");
+
+            } else {
+
+                console.error("❌ pg-dash introuvable");
+
             }
 
-            console.log("✅ Dashboard affiché");
-
-        } catch(e) {
+        } catch (e) {
 
             console.error("Erreur dashboard:", e);
 
@@ -5437,18 +5453,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-  <script>
-setTimeout(() => {
-  const a = document.getElementById('loading');
-  const b = document.getElementById('loader');
-  const c = document.getElementById('loading-screen');
 
-  if(a) a.style.display='none';
-  if(b) b.style.display='none';
-  if(c) c.style.display='none';
-
-  console.log("LOADER FORCÉMENT MASQUÉ");
-}, 3000);
-</script>
 </body>
 </html>
