@@ -5065,44 +5065,54 @@ function expPertes(){
 
 
 // ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH (GitHub Pages Mobile) ─────────────
+// ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH (Version Corrigée) ─────────────
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Force retour à la racine
     const path = window.location.pathname;
     if (path !== '/' && path !== '/poissonerie/' && path !== '/poissonerie/index.html' && !window.location.hash) {
         window.history.replaceState({}, '', '/');
     }
 
-    // Force brutale après délai
     setTimeout(() => {
         try {
-            // 1. Masquer le splash écran de force
-            _hideSplash();
+            // Masquer le splash de façon sécurisée
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                splash.style.transition = 'opacity .3s';
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    if (splash.parentNode) splash.parentNode.removeChild(splash);
+                }, 350);
+            }
 
-            // 2. Lancer le dashboard
+            // Lancer le dashboard
             if (typeof rDash === 'function') {
                 rDash();
             }
 
-            // 3. Cacher toutes les autres pages
-            document.querySelectorAll('.page, .screen, section, .content, div[id*="pg-"]').forEach(el => {
+            // Cacher toutes les autres pages
+            document.querySelectorAll('.page, .screen, section, div[id*="pg-"], .content').forEach(el => {
                 if (el) el.style.display = 'none';
             });
 
-            // 4. Afficher le dashboard
+            // Afficher le dashboard
             const dashPage = document.getElementById('pg-dash') || 
-                            document.querySelector('.dashboard, #dashboard, #pg-tableau-de-bord');
-            if (dashPage) dashPage.style.display = 'block';
+                            document.querySelector('.dashboard, #dashboard, #tableau-de-bord');
+            if (dashPage) {
+                dashPage.style.display = 'block';
+            }
 
-            console.log('%c✅ Dashboard forcé avec succès', 'color: green; font-weight: bold');
+            console.log('%c✅ Dashboard forcé (version sécurisée)', 'color: green; font-weight: bold');
 
         } catch(e) {
             console.error("Force dashboard error:", e);
-            _hideSplash(); // Sécurité
+            
+            // Dernier recours : masquer le splash même en cas d'erreur
+            const splash = document.getElementById('splash-screen');
+            if (splash) splash.style.display = 'none';
         }
-    }, 1600);
+    }, 1800);
 });
-
 // ══════════════════════════════════════════════════════════
 // STOCK INITIAL MODAL
 // ══════════════════════════════════════════════════════════
