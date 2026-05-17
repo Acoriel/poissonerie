@@ -5065,65 +5065,52 @@ function expPertes(){
 
 
 // ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH (GitHub Pages Mobile) ─────────────
-// ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH (Version Finale Mobile) ─────────────
+// ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH ──
 document.addEventListener('DOMContentLoaded', function() {
 
-    const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-                     || window.innerWidth < 768;
+    const isMobile =
+        /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        || window.innerWidth < 768;
 
-    if (!isMobile) return;   // Ne rien faire sur ordinateur
+    if (!isMobile) return;
 
-    console.log("📱 Mode mobile détecté → Force chargement complet");
+    console.log("📱 Mode mobile détecté");
 
-    // Force retour à l'accueil
-    const path = window.location.pathname;
-    if (path !== '/' && path !== '/poissonerie/' && path !== '/poissonerie/index.html') {
-        window.history.replaceState({}, '', '/');
-    }
-
-    // Force très tardive (après tout l'init)
     setTimeout(() => {
+
         try {
-            // 1. Masquer le splash de force
+
+            // Masquer splash
             const splash = document.getElementById('splash-screen');
+
             if (splash) {
-                splash.style.transition = 'opacity .4s';
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    if (splash.parentNode) splash.parentNode.removeChild(splash);
-                }, 500);
+                splash.style.display = 'none';
             }
 
-            // 2. Forcer le dashboard
-            if (typeof rDash === 'function') {
-                rDash();
-            }
-
-            // 3. Cacher toutes les autres pages
+            // Afficher dashboard
             document.querySelectorAll('.pg').forEach(pg => {
                 pg.classList.remove('on');
             });
 
-            // 4. Afficher le dashboard
             const dash = document.getElementById('pg-dash');
+
             if (dash) {
                 dash.classList.add('on');
+                dash.style.display = 'block';
+                dash.style.visibility = 'visible';
+                dash.style.opacity = '1';
             }
 
-            // 5. Mettre à jour le menu
-            document.querySelectorAll('.sb-lnk, .bn-item').forEach(el => el.classList.remove('on'));
-            const btnDash = document.getElementById('nav-dash') || document.getElementById('bn-dash');
-            if (btnDash) btnDash.classList.add('on');
-
-            console.log('%c✅ Dashboard forcé avec succès sur mobile', 'color:#10b981; font-weight:bold');
+            console.log("✅ Dashboard affiché");
 
         } catch(e) {
-            console.error("Force dashboard error:", e);
-            // Sécurité ultime
-            const splash = document.getElementById('splash-screen');
-            if (splash) splash.style.display = 'none';
+
+            console.error("Erreur dashboard:", e);
+
         }
-    }, 2200); // Délai plus long pour laisser init() terminer
+
+    }, 2500);
+
 });
 // ══════════════════════════════════════════════════════════
 // STOCK INITIAL MODAL
