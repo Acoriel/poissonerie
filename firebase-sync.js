@@ -66,6 +66,7 @@ async function initFirebase() {
     }
 
    const db = firebase.firestore();
+     console.log("DB TEST OK", db);
     const auth = firebase.auth();
 
     window.fbState.db = db;
