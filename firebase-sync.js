@@ -179,7 +179,7 @@ if (!db) return;
 // ── PUSH VERS FIRESTORE ────────────────────────────────────────────────────────
 let _pushDebounceTimer = null;
 async function fbPush(immediate = false) {
-  if (!window.fbState.initialized || !window.fbState.db || !window._fb) return;
+  if (!window.fbState.initialized || !window.fbState.db) return;
 
   // Debounce : attendre 1.5s avant de vraiment pousser (regroupe les sauvegardes rapides)
   if (!immediate) {
@@ -193,10 +193,8 @@ async function fbPush(immediate = false) {
   updateSyncBadge('syncing');
 
   try {
-    const { doc, setDoc } = window._fb;
-    const ts    = Date.now();
-    const docRef = doc(window.fbState.db, FB_COLL, FB_DOC_ID);
-
+    const ts = Date.now();
+const docRef = window.fbState.db.collection(FB_COLL).doc(FB_DOC_ID);
     const dbJson = JSON.stringify(window.DB);
     if (dbJson.length > 900000) {
       // Firestore limite à 1MB par document
@@ -206,7 +204,7 @@ async function fbPush(immediate = false) {
       return;
     }
 
-    await setDoc(docRef, {
+   await docRef.set({
       dbJson:      dbJson,
       _ts:         ts,
       _pushedBy:   window.fbState.userId,
@@ -230,15 +228,14 @@ async function fbPush(immediate = false) {
 
 // ── PULL MANUEL DEPUIS FIRESTORE ──────────────────────────────────────────────
 async function fbPull() {
-  if (!window.fbState.initialized || !window.fbState.db || !window._fb) {
+  if (!window.fbState.initialized || !window.fbState.db) {
     showSyncToast('❌ Firebase non connecté', true);
     return;
   }
   updateSyncBadge('syncing');
   try {
-    const { doc, getDoc } = window._fb;
-    const docRef  = doc(window.fbState.db, FB_COLL, FB_DOC_ID);
-    const snapshot = await getDoc(docRef);
+    const docRef = window.fbState.db.collection(FB_COLL).doc(FB_DOC_ID);
+const snapshot = await docRef.get();
 
     if (!snapshot.exists()) {
       showSyncToast('⚠️ Aucune donnée cloud trouvée', true);
