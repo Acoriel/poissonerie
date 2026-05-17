@@ -115,7 +115,7 @@ if (!db) return;
   let localTs  = parseInt(localStorage.getItem('poisson_local_ts') || '0');
 
  window.fbState.listener = docRef.onSnapshot(snapshot => {
-    if (!snapshot.exists()) {
+    if (!snapshot.exists) {
       console.log('[Firebase] Document inexistant — premier push à venir');
       return;
     }
