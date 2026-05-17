@@ -7,7 +7,7 @@
    SERVICE WORKER — Poissonerie PWA
    ══════════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'poissonerie-v2027';
+const CACHE_NAME = 'poissonerie-v2028';
 
 const ASSETS_TO_CACHE = [
   './',
