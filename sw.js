@@ -3,7 +3,14 @@
    Gère le cache offline + mise à jour automatique
    ══════════════════════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'poissonerie-v2';
+const CACHE_NAME = 'poissonerie-v3';
+self.addEventListener('install', () => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(clients.claim());
+});
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -52,15 +59,26 @@ self.addEventListener('activate', event => {
 
 // Fetch : stratégie Network-first pour l'app, Cache-first pour les assets
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
 
-  // Ne pas intercepter les requêtes Firebase (Firestore, Auth, etc.)
-  if (url.hostname.includes('firebase') ||
-      url.hostname.includes('firebaseio') ||
-      url.hostname.includes('googleapis.com') ||
-      url.hostname.includes('gstatic.com')) {
-    return; // laisser passer sans cache
-  }
+  if (event.request.method !== 'GET') return;
+
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+
+        const responseClone = response.clone();
+
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseClone);
+        });
+
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
+  );
+});
 
   // Pour l'app principale et les assets : Cache with network fallback
   event.respondWith(
