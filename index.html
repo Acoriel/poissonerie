@@ -5450,5 +5450,18 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+  <script>
+setTimeout(() => {
+  const a = document.getElementById('loading');
+  const b = document.getElementById('loader');
+  const c = document.getElementById('loading-screen');
+
+  if(a) a.style.display='none';
+  if(b) b.style.display='none';
+  if(c) c.style.display='none';
+
+  console.log("LOADER FORCÉMENT MASQUÉ");
+}, 3000);
+</script>
 </body>
 </html>
