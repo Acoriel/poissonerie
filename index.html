@@ -5064,38 +5064,43 @@ function expPertes(){
 }
 
 
-// ── FORCE PAGE D'ACCUEIL AU CHARGEMENT (solution GitHub Pages + Mobile) ─────────────
+// ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH (GitHub Pages Mobile) ─────────────
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Force le retour à la racine pour éviter les routes fantômes
+
+    // Force retour à la racine
     const path = window.location.pathname;
     if (path !== '/' && path !== '/poissonerie/' && path !== '/poissonerie/index.html' && !window.location.hash) {
         window.history.replaceState({}, '', '/');
     }
 
-    // Force l'affichage du Tableau de Bord après l'initialisation
+    // Force brutale après délai
     setTimeout(() => {
         try {
-            // Méthode 1 : Appeler directement la fonction du dashboard (la plus probable)
+            // 1. Masquer le splash écran de force
+            _hideSplash();
+
+            // 2. Lancer le dashboard
             if (typeof rDash === 'function') {
                 rDash();
             }
 
-            // Méthode 2 : Simuler le clic sur l'onglet Accueil / Tableau de bord
-            const btnAccueil = document.querySelector('#btn-dash, .menu-item[data-page="dash"], a[href*="dash"], button[onclick*="dash"]');
-            if (btnAccueil) btnAccueil.click();
-
-            // Méthode 3 : Cacher toutes les pages sauf le dashboard
-            document.querySelectorAll('.page, .screen, section').forEach(el => {
-                el.style.display = 'none';
+            // 3. Cacher toutes les autres pages
+            document.querySelectorAll('.page, .screen, section, .content, div[id*="pg-"]').forEach(el => {
+                if (el) el.style.display = 'none';
             });
-            const dashPage = document.getElementById('pg-dash') || document.querySelector('.dashboard');
+
+            // 4. Afficher le dashboard
+            const dashPage = document.getElementById('pg-dash') || 
+                            document.querySelector('.dashboard, #dashboard, #pg-tableau-de-bord');
             if (dashPage) dashPage.style.display = 'block';
 
+            console.log('%c✅ Dashboard forcé avec succès', 'color: green; font-weight: bold');
+
         } catch(e) {
-            console.error("Erreur force dashboard :", e);
+            console.error("Force dashboard error:", e);
+            _hideSplash(); // Sécurité
         }
-    }, 1200);   // On attend que ton init() ait fini
+    }, 1600);
 });
 
 // ══════════════════════════════════════════════════════════
