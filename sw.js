@@ -49,13 +49,34 @@ self.addEventListener('activate', event => {
 });
 
 // FETCH
+// FETCH
 self.addEventListener('fetch', event => {
 
   if (event.request.method !== 'GET') return;
 
+  // Ne jamais mettre index.html en cache
+  if (
+    event.request.url.includes('index.html') ||
+    event.request.url.endsWith('/') ||
+    event.request.mode === 'navigate'
+  ) {
+
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' })
+    );
+
+    return;
+  }
+
+  // Cache normal pour les autres fichiers
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
+    caches.match(event.request).then(cached => {
+
+      if (cached) {
+        return cached;
+      }
+
+      return fetch(event.request).then(response => {
 
         const responseClone = response.clone();
 
@@ -64,10 +85,9 @@ self.addEventListener('fetch', event => {
         });
 
         return response;
-      })
-      .catch(() => {
-        return caches.match(event.request);
-      })
+      });
+
+    })
   );
 });
 
