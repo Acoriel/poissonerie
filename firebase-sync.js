@@ -102,9 +102,8 @@ async function initFirebase() {
 
 // ── LISTENER TEMPS RÉEL ───────────────────────────────────────────────────────
 function startFirestoreListener() {
-  const { db } = window.fbState;
-  if (!db || !window._fb) return;
-  const { doc, onSnapshot } = window._fb;
+  cconst { db } = window.fbState;
+if (!db) return;
 
   // Arrêter l'ancien listener s'il existe
   if (window.fbState.listener) {
@@ -112,10 +111,10 @@ function startFirestoreListener() {
     window.fbState.listener = null;
   }
 
-  const docRef = doc(db, FB_COLL, FB_DOC_ID);
+  const docRef = db.collection(FB_COLL).doc(FB_DOC_ID);
   let localTs  = parseInt(localStorage.getItem('poisson_local_ts') || '0');
 
-  window.fbState.listener = onSnapshot(docRef, snapshot => {
+ window.fbState.listener = docRef.onSnapshot(snapshot => {
     if (!snapshot.exists()) {
       console.log('[Firebase] Document inexistant — premier push à venir');
       return;
