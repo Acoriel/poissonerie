@@ -5427,16 +5427,24 @@ setTimeout(sbUpdateThumb, 300);
   };
 })();
 </script>
-  <script>
+<script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => {
-        console.log('[SW] enregistré', reg.scope);
-      })
-      .catch(err => {
-        console.error('[SW] erreur', err);
-      });
+  window.addEventListener('load', async () => {
+
+    const path = window.location.pathname.includes('/')
+      ? window.location.pathname.replace(/\/[^\/]*$/, '/')
+      : '/';
+
+    navigator.serviceWorker.register('./sw.js', {
+      scope: path
+    })
+    .then(reg => {
+      console.log('[SW] enregistré :', reg.scope);
+    })
+    .catch(err => {
+      console.error('[SW] erreur :', err);
+    });
+
   });
 }
 </script>
