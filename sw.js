@@ -1,46 +1,28 @@
-/* ══════════════════════════════════════════════════════════════════
-   SERVICE WORKER — Poissonerie PWA
-   Gère le cache offline + mise à jour automatique
-   ══════════════════════════════════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════
-   SERVICE WORKER — Poissonerie PWA
-   ══════════════════════════════════════════════════════════════════ */
-
 const CACHE_NAME = 'poissonerie-v2032';
 
-const ASSETS_TO_CACHE = [
+const ASSETS = [
   './',
   './index.html',
-  './manifest.json',
-  'https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800&family=JetBrains+Mono:wght@400;500;600&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'
+  './manifest.json'
 ];
 
-// INSTALLATION
+// INSTALL
 self.addEventListener('install', event => {
-  console.log('[SW] Installation...');
-
   self.skipWaiting();
 
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      return cache.addAll(ASSETS);
     })
   );
 });
 
-// ACTIVATION
+// ACTIVATE
 self.addEventListener('activate', event => {
-  console.log('[SW] Activation...');
-
   event.waitUntil(
-    caches.keys().then(cacheNames => {
+    caches.keys().then(names => {
       return Promise.all(
-        cacheNames
+        names
           .filter(name => name !== CACHE_NAME)
           .map(name => caches.delete(name))
       );
@@ -49,26 +31,40 @@ self.addEventListener('activate', event => {
 });
 
 // FETCH
-// FETCH
 self.addEventListener('fetch', event => {
 
+  // Ignorer les requêtes non GET
   if (event.request.method !== 'GET') return;
 
-  // Ne jamais mettre index.html en cache
+  // IMPORTANT :
+  // Ne jamais intercepter Firebase / extensions / chrome
+  const url = event.request.url;
+
   if (
-    event.request.url.includes('index.html') ||
-    event.request.url.endsWith('/') ||
-    event.request.mode === 'navigate'
+    url.includes('firestore.googleapis.com') ||
+    url.includes('googleapis.com') ||
+    url.startsWith('chrome-extension://')
+  ) {
+    return;
+  }
+
+  // HTML = toujours réseau
+  if (
+    event.request.mode === 'navigate' ||
+    url.endsWith('.html') ||
+    url.includes('?v=')
   ) {
 
     event.respondWith(
-      fetch(event.request, { cache: 'no-store' })
+      fetch(event.request, {
+        cache: 'no-store'
+      }).catch(() => caches.match('./index.html'))
     );
 
     return;
   }
 
-  // Cache normal pour les autres fichiers
+  // Cache-first pour les assets
   event.respondWith(
     caches.match(event.request).then(cached => {
 
@@ -76,24 +72,26 @@ self.addEventListener('fetch', event => {
         return cached;
       }
 
-      return fetch(event.request).then(response => {
+      return fetch(event.request)
+        .then(response => {
 
-        const responseClone = response.clone();
+          // Ne pas cacher si erreur
+          if (!response || response.status !== 200) {
+            return response;
+          }
 
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, responseClone);
+          const clone = response.clone();
+
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, clone);
+          });
+
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request);
         });
-
-        return response;
-      });
 
     })
   );
-});
-
-// MESSAGE
-self.addEventListener('message', event => {
-  if (event.data && event.data.action === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
 });
