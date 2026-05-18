@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  
-  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
@@ -10,11 +8,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Poissonerie">
 <meta name="theme-color" content="#0F172A">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>🐟 Poissonerie</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -501,6 +498,92 @@ html,body{height:100%;font-family:'Inter',sans-serif;font-size:14px;background:v
 .vl-del{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:16px;padding:4px;border-radius:4px;line-height:1}
 .vl-del:hover{color:var(--rd);background:var(--rd-l)}
 
+/* ── PANEL FILTER BAR (remplace .fbar dans les panels) ── */
+.panel-filter{
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:10px 14px;
+  background:var(--sf);
+  border-bottom:1px solid var(--bd);
+  flex-shrink:0;
+}
+.panel-filter label{
+  font-size:10px;font-weight:700;
+  color:var(--tx2);
+  text-transform:uppercase;letter-spacing:.06em;
+  white-space:nowrap;
+}
+.panel-filter input[type="date"],
+.panel-filter input[type="text"],
+.panel-filter select{
+  padding:7px 10px;
+  border:1.5px solid var(--bd);
+  border-radius:8px;
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  color:var(--tx);
+  background:var(--sf);
+  outline:none;
+  transition:border-color .15s;
+  flex:1;
+  min-width:110px;
+  max-width:180px;
+}
+.panel-filter input[type="date"]:focus,
+.panel-filter input[type="text"]:focus,
+.panel-filter select:focus{ border-color:var(--bl); }
+.panel-filter .fbar-btns{ display:flex; gap:6px; }
+.panel-filter .fbar-btns .btn{ flex:1; }
+@media(max-width:767px){
+  .panel-filter{
+    padding:8px 12px;
+    gap:6px;
+  }
+  .panel-filter input[type="date"]{
+    font-size:15px;
+    padding:9px 10px;
+    min-width:100px;
+    -webkit-appearance:auto;
+    appearance:auto;
+  }
+  .panel-filter select{
+    font-size:15px;
+    padding:9px 10px;
+    min-width:100px;
+  }
+  .panel-filter .fbar-btns{ width:100%; }
+  .panel-filter .fbar-btns .btn{ flex:1; }
+  .panel-filter .btn.bsm{ min-width:80px; }
+}
+
+/* ── DATE INPUT DANS PANELS ── */
+.panel-date-inp{
+  padding:7px 10px;
+  border:1.5px solid var(--bd);
+  border-radius:8px;
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+  color:var(--tx);
+  background:var(--sf);
+  outline:none;
+  transition:border-color .15s;
+  min-width:120px;
+}
+.panel-date-inp:focus{ border-color:var(--bl); }
+@media(max-width:767px){
+  .panel-date-inp{
+    font-size:15px !important;
+    padding:9px 10px !important;
+    width:auto !important;
+    flex:1;
+    -webkit-appearance:auto !important;
+    appearance:auto !important;
+  }
+}
+
 /* ── FILTRE BARRE ── */
 .fbar{
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;
@@ -888,6 +971,9 @@ html,body{ font-size:15px; }
   display:none;
 }
 .user-menu.open{ display:block; }
+@media(max-width:767px){
+  .user-menu{ top:52px; right:8px; left:8px; min-width:unset; }
+}
 .um-item{
   display:flex;align-items:center;gap:10px;
   padding:10px 14px;font-size:13px;cursor:pointer;
@@ -1085,6 +1171,11 @@ html,body{ font-size:15px; }
   .hide-mobile{ display:none !important; }
   .show-mobile{ display:block !important; }
   .full-mobile{ width:100% !important; }
+
+  /* ── Topbar user compact ── */
+  .tb-user{ padding:4px 8px; font-size:11px; max-width:120px; }
+  #tb-user-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:80px; }
+  .tb-actions{ gap:4px; }
 }
 
 /* ── Petits mobiles (≤ 380px) ── */
@@ -1096,12 +1187,8 @@ html,body{ font-size:15px; }
   .ttab{ padding:7px 9px; font-size:11px; }
 }
 </style>
-<link rel="manifest" href="./manifest.json">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="./icon-192.png">
 </head>
 <body>
-  
 <!-- PIN OVERLAY -->
 <div class="pin-ov hidden" id="pin-ov">
   <div style="font-size:42px">🐟</div>
@@ -1225,12 +1312,10 @@ html,body{ font-size:15px; }
       <div class="tb-chip tb-chip-stk"><span class="tb-chip-l">Stock</span><span class="tb-chip-v" id="tb-stk">—</span></div>
     </div>
     <div class="tb-actions">
-      <button onclick="refreshAll()" class="tb-icon-btn" title="Actualiser les soldes" id="btn-refresh">
+      <button onclick="refreshAll()" class="tb-icon-btn hide-mobile" title="Actualiser les soldes" id="btn-refresh">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
       </button>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-      </button>
-      <div id="tb-sync" title="Synchronisation" style="display:flex;align-items:center;gap:5px;padding:4px 9px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0" onclick="nav('save')">
+      <div id="tb-sync" title="Synchronisation" class="hide-mobile" style="display:flex;align-items:center;gap:5px;padding:4px 9px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0" onclick="nav('save')">
         <span id="tb-sync-dot" style="width:7px;height:7px;border-radius:50%;background:var(--tx3);flex-shrink:0"></span>
         <span id="tb-sync-txt" style="color:var(--tx3)">Hors ligne</span>
       </div>
@@ -1239,7 +1324,7 @@ html,body{ font-size:15px; }
         <span id="tb-user-name">—</span>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <button onclick="nav('save')" class="tb-icon-btn" title="Paramètres">
+      <button onclick="nav('save')" class="tb-icon-btn hide-mobile" title="Paramètres">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
       </button>
     </div>
@@ -1478,14 +1563,7 @@ html,body{ font-size:15px; }
         <div class="fr2" style="align-items:end"><div class="fg"><label>Fichier JSON</label><input type="file" id="imp-f" accept=".json" style="padding:6px 8px;cursor:pointer"></div>
         <div style="display:flex;align-items:flex-end"><button class="btn bw" onclick="impJSON()">⬆ Charger</button></div></div>
       </div></div>
-      
-      <!-- ══ FIREBASE SYNC PANEL ══════════════════════════ -->
-      <div id="firebase-config-panel" style="margin-bottom:14px">
-        <div class="card"><div class="ch"><span class="ch-t">🔥 Synchronisation Firebase (temps réel)</span></div>
-          <div class="cb"><div class="al ali">Chargement de la configuration Firebase...</div></div>
-        </div>
-      </div>
-      <div class="card"><div class="ch"><span class="ch-t">☁️ Sauvegarde externe (JSONbin.io / Webhook)</span><span class="ch-s" id="cloud-mini">Non configuré</span></div>
+      <div class="card"><div class="ch"><span class="ch-t">☁️ Synchronisation temps réel (JSONbin.io)</span><span class="ch-s" id="cloud-mini">Non configuré</span></div>
         <div class="cb">
           <div class="cloud-status cs-idle" id="cloud-status"><span id="cloud-icon">⚙️</span>&nbsp;<span id="cloud-txt">Non configuré</span></div>
           <div class="ttabs"><button class="ttab on" onclick="setCloudMode('jsonbin',this)">JSONbin.io</button><button class="ttab" onclick="setCloudMode('webhook',this)">Webhook</button></div>
@@ -1599,7 +1677,7 @@ html,body{ font-size:15px; }
     <button class="btn bg bsm" onclick="expVentesPDF()" title="Générer un rapport PDF des ventes par jour">📄 PDF</button>
     <button class="btn bg bsm" onclick="closePanel('dv')">✕</button>
   </div>
-  <div class="fbar" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;flex-shrink:0">
+  <div class="panel-filter">
     <div class="ttabs" style="margin:0"><button class="ttab on" onclick="setDVMode('periode',this)">📅 Période</button><button class="ttab" onclick="setDVMode('jour',this)">📆 Par jour</button></div>
     <div id="dv-f-periode" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
       <input type="date" id="dv-d1" class="dv-date-inp">
@@ -1686,13 +1764,13 @@ html,body{ font-size:15px; }
     <button class="btn bg bsm" onclick="expAchats()">⬇ Excel</button>
     <button class="btn bg bsm" onclick="closePanel('achats')">✕</button>
   </div>
-  <div class="fbar" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;flex-shrink:0">
+  <div class="panel-filter">
     <label>Produit :</label>
     <select id="af-prod" style="padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none"><option value="">Tous</option></select>
     <label>Du</label>
-    <input type="date" id="af-d1" style="width:130px;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none">
+    <input type="date" id="af-d1" class="panel-date-inp">
     <label>Au</label>
-    <input type="date" id="af-d2" style="width:130px;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none">
+    <input type="date" id="af-d2" class="panel-date-inp">
     <button class="btn bp bsm" onclick="rAchatsTable()">Filtrer</button>
     <button class="btn bg bsm" onclick="resetAchats()">Tout</button>
   </div>
@@ -1725,13 +1803,13 @@ html,body{ font-size:15px; }
     <button class="btn bg bsm" onclick="expCharges()">⬇ Excel</button>
     <button class="btn bg bsm" onclick="closePanel('charges')">✕</button>
   </div>
-  <div class="fbar" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;flex-shrink:0">
+  <div class="panel-filter">
     <label>Catégorie :</label>
     <select id="chf-cat" style="padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none"><option value="">Toutes</option></select>
     <label>Du</label>
-    <input type="date" id="chf-d1" style="width:130px;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none">
+    <input type="date" id="chf-d1" class="panel-date-inp">
     <label>Au</label>
-    <input type="date" id="chf-d2" style="width:130px;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none">
+    <input type="date" id="chf-d2" class="panel-date-inp">
     <button class="btn bp bsm" onclick="rChargesTable()">Filtrer</button>
     <button class="btn bg bsm" onclick="resetCharges()">Tout</button>
   </div>
@@ -1763,13 +1841,13 @@ html,body{ font-size:15px; }
     <button class="btn bg bsm" onclick="expPertes()">⬇ Excel</button>
     <button class="btn bg bsm" onclick="closePanel('pertes')">✕</button>
   </div>
-  <div class="fbar" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;flex-shrink:0">
+  <div class="panel-filter">
     <label>Produit :</label>
     <select id="pf-prod" style="padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none"><option value="">Tous</option></select>
     <label>Du</label>
-    <input type="date" id="pf-d1" style="width:130px;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none">
+    <input type="date" id="pf-d1" class="panel-date-inp">
     <label>Au</label>
-    <input type="date" id="pf-d2" style="width:130px;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none">
+    <input type="date" id="pf-d2" class="panel-date-inp">
     <button class="btn bp bsm" onclick="rPertesTable()">Filtrer</button>
     <button class="btn bg bsm" onclick="resetPertes()">Tout</button>
   </div>
@@ -1801,11 +1879,11 @@ html,body{ font-size:15px; }
     <button class="btn bg bsm" onclick="expApports()">⬇ Excel</button>
     <button class="btn bg bsm" onclick="closePanel('apports')">✕</button>
   </div>
-  <div class="fbar" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;flex-shrink:0">
+  <div class="panel-filter">
     <label>Du</label>
-    <input type="date" id="apf-d1" style="width:130px;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none">
+    <input type="date" id="apf-d1" class="panel-date-inp">
     <label>Au</label>
-    <input type="date" id="apf-d2" style="width:130px;padding:5px 8px;border:1px solid var(--bd);border-radius:var(--r);font-size:11px;outline:none">
+    <input type="date" id="apf-d2" class="panel-date-inp">
     <button class="btn bp bsm" onclick="rApportsTable()">Filtrer</button>
     <button class="btn bg bsm" onclick="resetApports()">Tout</button>
   </div>
@@ -5064,67 +5142,67 @@ function expPertes(){
 }
 
 
-// ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH (GitHub Pages Mobile) ─────────────
-// ── FORCE DASHBOARD + ANTI-BLOCAGE SPLASH (Version Finale Mobile) ─────────────
-document.addEventListener('DOMContentLoaded', function() {
+// ══════════════════════════════════════════════════════════
+// INITIALISATION — différée pour mobile
+// ══════════════════════════════════════════════════════════
+function _splashMsg(msg){ const el=document.getElementById('splash-msg'); if(el) el.textContent=msg; }
+function _hideSplash(){ const s=document.getElementById('splash-screen'); if(s){ s.style.transition='opacity .3s'; s.style.opacity='0'; setTimeout(()=>s.remove(),350); } }
 
-    const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-                     || window.innerWidth < 768;
+(function init(){
+  // Étape 1 — immédiate : charger les données (synchrone, rapide)
+  _splashMsg('Chargement des données…');
+  if(!loadSaved()) console.log('Données initiales chargées');
 
-    if (!isMobile) return;   // Ne rien faire sur ordinateur
+  // Étape 2 — différée : initialiser l'interface
+  setTimeout(()=>{
+    _splashMsg('Initialisation…');
+    try {
+      rSel();
+      initDates();
+    } catch(e){ console.error(e); }
 
-    console.log("📱 Mode mobile détecté → Force chargement complet");
+    setTimeout(()=>{
+      _splashMsg('Calcul des soldes…');
+      try {
+        // Sync ventes
+        const dates = new Set();
+        Object.values(DB.products).forEach(p => (p.ventes||[]).forEach(v => dates.add(v.date)));
+        DB.ops.filter(o => o.type==='vente').forEach(o => dates.add(o.date));
+        dates.forEach(d => _syncVenteOp(d));
 
-    // Force retour à l'accueil
-    const path = window.location.pathname;
-    if (path !== '/' && path !== '/poissonerie/' && path !== '/poissonerie/index.html') {
-        window.history.replaceState({}, '', '/');
-    }
+        rTopbar();
+        rOps();
+      } catch(e){ console.error(e); }
 
-    // Force très tardive (après tout l'init)
-    setTimeout(() => {
+      setTimeout(()=>{
+        _splashMsg('Tableau de bord…');
         try {
-            // 1. Masquer le splash de force
-            const splash = document.getElementById('splash-screen');
-            if (splash) {
-                splash.style.transition = 'opacity .4s';
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    if (splash.parentNode) splash.parentNode.removeChild(splash);
-                }, 500);
-            }
+          initStatDates();
+          initBilan();
+          rDash();
+        } catch(e){ console.error(e); }
 
-            // 2. Forcer le dashboard
-            if (typeof rDash === 'function') {
-                rDash();
-            }
+        setTimeout(()=>{
+          try {
+            refreshCloudStatus();
+            renderCloudLog();
+            _users = loadUsers();
+            startSyncLoop();
+            loadCompanyInfo();
+          } catch(e){ console.error(e); }
 
-            // 3. Cacher toutes les autres pages
-            document.querySelectorAll('.pg').forEach(pg => {
-                pg.classList.remove('on');
-            });
+          setTimeout(()=>{
+            try { initPIN(); } catch(e){ console.error('Init PIN error:',e); }
+            // Cacher l'écran de chargement
+            _hideSplash();
+          }, 80);
+        }, 50);
+      }, 80);
+    }, 80);
+  }, 50);
+})();
 
-            // 4. Afficher le dashboard
-            const dash = document.getElementById('pg-dash');
-            if (dash) {
-                dash.classList.add('on');
-            }
 
-            // 5. Mettre à jour le menu
-            document.querySelectorAll('.sb-lnk, .bn-item').forEach(el => el.classList.remove('on'));
-            const btnDash = document.getElementById('nav-dash') || document.getElementById('bn-dash');
-            if (btnDash) btnDash.classList.add('on');
-
-            console.log('%c✅ Dashboard forcé avec succès sur mobile', 'color:#10b981; font-weight:bold');
-
-        } catch(e) {
-            console.error("Force dashboard error:", e);
-            // Sécurité ultime
-            const splash = document.getElementById('splash-screen');
-            if (splash) splash.style.display = 'none';
-        }
-    }, 2200); // Délai plus long pour laisser init() terminer
-});
 // ══════════════════════════════════════════════════════════
 // STOCK INITIAL MODAL
 // ══════════════════════════════════════════════════════════
@@ -5408,47 +5486,45 @@ setTimeout(sbUpdateThumb, 300);
     }, { passive: true });
   }
 })();
-</script>
 
-<!-- ══════════════════════════════════════════════════════════
-     PWA + FIREBASE REAL-TIME SYNC
-     ══════════════════════════════════════════════════════════ -->
-<script src="./firebase-sync.js"></script>
-<script>
-// Rafraichir le panneau Firebase quand on navigue vers Paramètres
-(function patchNavForFirebase(){
-  const origNav = window.nav;
-  if(typeof origNav !== 'function') { setTimeout(patchNavForFirebase, 500); return; }
-  window.nav = function(id) {
-    origNav.call(this, id);
-    if(id === 'save') {
-      setTimeout(()=>{
-        if(typeof renderFirebaseConfigPanel === 'function') renderFirebaseConfigPanel();
-      }, 100);
-    }
-  };
-})();
-</script>
-<script>
+// ══════════════════════════════════════════════════════════
+// PWA — Installation & Service Worker
+// ══════════════════════════════════════════════════════════
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const btn = document.getElementById('pwa-install-btn');
+  if (btn) btn.style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  const btn = document.getElementById('pwa-install-btn');
+  if (btn) btn.style.display = 'none';
+  toast('✓ Application installée !');
+});
+
+function installPWA() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; });
+}
+
+// Enregistrement du Service Worker
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', async () => {
-
-    const path = window.location.pathname.includes('/')
-      ? window.location.pathname.replace(/\/[^\/]*$/, '/')
-      : '/';
-
-    navigator.serviceWorker.register('./sw.js', {
-      scope: path
-    })
-    .then(reg => {
-      console.log('[SW] enregistré :', reg.scope);
-    })
-    .catch(err => {
-      console.error('[SW] erreur :', err);
-    });
-
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
   });
 }
 </script>
+
+<!-- Bouton d'installation PWA -->
+<div id="pwa-install-btn" onclick="installPWA()" style="display:none;position:fixed;bottom:calc(var(--nav-h,62px) + 12px);left:50%;transform:translateX(-50%);z-index:400;background:linear-gradient(135deg,#2563EB,#1D4ED8);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,.5);align-items:center;gap:8px;white-space:nowrap;">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  Installer l'application
+</div>
+
 </body>
 </html>
